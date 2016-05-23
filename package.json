@@ -1,0 +1,27 @@
+{
+  "name": "snake",
+  "version": "1.0.0",
+  "description": "basic snake game written in Typescript",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc && rollup -c && node-sass --output-style compressed style.scss > build/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/serkanyersen/snake.git"
+  },
+  "keywords": [
+    "snake"
+  ],
+  "author": "Serkan Yersen <serkanyersen@gmail.com> (http://serkan.io/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/serkanyersen/snake/issues"
+  },
+  "homepage": "https://gitlab.com/serkanyersen/snake#README",
+  "dependencies": {
+    "node-sass": "^3.7.0",
+    "rollup": "^0.26.3",
+    "typescript": "^1.8.10"
+  }
+}

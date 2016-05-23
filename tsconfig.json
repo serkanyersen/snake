@@ -1,12 +1,12 @@
 {
     "compilerOptions": {
-        "outDir": "build",
-        "target": "es5",
-        "module": "commonjs",
+        "outDir": "output",
+        "sourceMap": false,
+        "target": "es6",
+        "module": "es6",
         "allowJs": false
     },
-    "exclude": [
-        "node_modules",
-        "build"
+    "files": [
+        "./src/index.ts"
     ]
 }
