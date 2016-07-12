@@ -22,6 +22,7 @@
   "dependencies": {
     "node-sass": "^3.7.0",
     "rollup": "^0.26.3",
+    "tslint": "^3.13.0",
     "typescript": "^1.8.10"
   }
 }
