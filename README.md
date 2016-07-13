@@ -1,5 +1,5 @@
 ## Basic Snake Game written in TypeScript
-Just for fun. It's written in vanilla js, no libraries used. Also it used HTML elements to render the game instead of canvas.
+Just for fun. It's written in vanilla js, no libraries used. Also it uses HTML elements to render the game instead of canvas.
 
 ![Example](snake.gif)
 
