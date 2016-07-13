@@ -16,12 +16,8 @@
             "args": ["run", "build"]
         },
         {
-            "taskName": "update",
-            "args": ["update"]
-        },
-        {
-            "taskName": "test",
-            "args": ["run", "test"]
+            "taskName": "start",
+            "args": ["start"]
         }
     ]
 }

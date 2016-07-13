@@ -4,7 +4,8 @@
   "description": "basic snake game written in Typescript",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc && rollup -c && node-sass --output-style compressed style.scss > build/style.css;echo 'Build Done.'"
+    "build": "tsc && rollup -c && node-sass --output-style compressed style.scss > build/style.css;echo 'Build Done.'",
+    "start": "live-server . --watch=build"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   },
   "homepage": "https://gitlab.com/serkanyersen/snake#README",
   "dependencies": {
+    "live-server": "^1.0.0",
     "node-sass": "^3.7.0",
     "rollup": "^0.26.3",
     "tslint": "^3.13.0",
