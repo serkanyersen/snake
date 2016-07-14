@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc && rollup -c && node-sass --output-style compressed style.scss > build/style.css && echo 'Build Done.'",
-    "start": "live-server . --watch=build"
+    "start": "live-server . --watch=build",
+    "lint": "find src -type f -name '*.ts' | xargs tslint"
   },
   "repository": {
     "type": "git",
