@@ -23,9 +23,9 @@
   "homepage": "https://gitlab.com/serkanyersen/snake#README",
   "dependencies": {
     "live-server": "^1.0.0",
-    "node-sass": "^3.7.0",
-    "rollup": "^0.26.3",
-    "tslint": "^3.13.0",
-    "typescript": "^1.8.10"
+    "node-sass": "^4.6.0",
+    "rollup": "^0.51.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
   }
 }

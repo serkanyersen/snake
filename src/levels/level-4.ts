@@ -1,4 +1,4 @@
-import Level, {LevelMap} from "../level";
+import Level, {LevelMap} from "../Level";
 
 export default new Level((rows, cols): LevelMap => {
     let [halfRows, halfCols] = [rows / 2, cols / 2];

@@ -1,4 +1,7 @@
 export default {
-  entry: 'output/index.js',
-  dest: 'build/snake.js' // equivalent to --output
+  input: 'output/index.js',
+  output: {
+    file: 'build/snake.js',
+    format: 'umd',
+  },
 };
