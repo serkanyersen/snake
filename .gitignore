@@ -1,4 +1,4 @@
 build
 .sass-cache
 node_modules
-output
+dist
