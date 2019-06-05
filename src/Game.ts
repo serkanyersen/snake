@@ -206,8 +206,8 @@ export default class Game {
   }
 
   /**
-     * Don"t let snake to go backwards
-     */
+   * Don"t let snake to go backwards
+   */
   // eslint-disable-next-line class-methods-use-this
   notBackwards (key: number): boolean {
     const lastDirection = Directions.peek();
