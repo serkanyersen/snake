@@ -50,9 +50,14 @@ export default class Game {
     const x = SIZE * 7;
     const y = SIZE * 5;
 
+    let curr = this.head;
     this.head.move(x, y);
-    this.head.next = new Piece(x - SIZE, y);
-    this.head.next.next = new Piece(x - SIZE * 2, y, 'tail');
+
+    for (let i = 1; i <= 6; i += 1) {
+      curr.next = new Piece(x - SIZE * i + 2, y);
+      curr = curr.next;
+    }
+    curr.setType('tail');
   }
 
   /**

@@ -28,7 +28,7 @@ html, body {
 }
 
 body {
-  background-image: url("./images/grass.png")
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAD1BMVEU9mS0wgh8vcygmWzAwdTJ+TyYjAAABU0lEQVR4AY3KMWEEQRAEsaYgCkVhKJg/Jmef3irWthGJyC6q23QvwZUq0s9l9hBOVU2pbMrOOPsOlIWqypbNtpzvEGPapDratrmr+w7EdU1k687OndJDqNPdicrmuksrHoLqTqXU1Zxtbk+hZKvaqGw7t809hKIz2YS6Tdmu3oKOw0XJxdluDwGq40qiQtfmO2ypcZutTEHhIbhkc4dpy0qNewhXZe66vzPbpsp29R2kSJrD3CYsvkMoBXNdITp6CLaUotNdt6u2bus7zCFKuYLmLPMdnJmyaWLqtrNt3yFlywYTWrbN+Q7XyeCSxOasU9+hi3Odjdpkh+olSORiR5nYzmOgtN1d0HFtp/IQ0mRuSrjMVeI7qFvcHEXGJjwFu83mNpGt4wp9hx0Gc3WbM6HqIbjTdc3NDVGF2nfocnHiuqvbXHY7D+EsRanMnavONj7DPyF/vWXJ8sjoAAAAAElFTkSuQmCC);
 }
 
 .score {
@@ -61,6 +61,10 @@ button#start {
   color: darken($bodyColor, 10%);
   line-height: 20px;
   z-index: 2;
+
+  &:before {
+    content: "∴";
+  }
 }
 
 .wall {
