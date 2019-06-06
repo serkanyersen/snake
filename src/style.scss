@@ -1,6 +1,6 @@
 $headColor: rgb(26, 24, 24);
 $borderColor: rgb(37, 35, 34);
-$bodyColor: rgb(238, 241, 10);
+$bodyColor: #89C430;
 $foodColor: #85144b;
 $background: #32822B;
 $textColor: #001f3f;
@@ -63,6 +63,7 @@ button#start {
   z-index: 2;
 
   &:before {
+    color: #C5F7A4;
     content: "∴";
   }
 }
