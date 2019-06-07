@@ -29,6 +29,8 @@ export default class Game {
 
   private debugSpeed: number = 0;
 
+  private keyHeld: number = 0;
+
   private noClip: boolean = false;
 
   constructor (private levels: Level[]) {
@@ -73,6 +75,7 @@ export default class Game {
       this.tail = this.resetHead();
       this.length = 0;
       this.debugSpeed = 0;
+      this.keyHeld = 0;
       this.score = 0;
       Directions.flush();
 
@@ -175,7 +178,7 @@ export default class Game {
 
   getSpeed (): number {
     const initialSpeed = 130;
-    const calculated = (initialSpeed - this.length * 0.5) + this.debugSpeed;
+    const calculated = (initialSpeed - this.length * 0.5) + this.debugSpeed + this.keyHeld;
 
     return Utils.bound(calculated, FASTEST, SLOWEST);
   }
@@ -349,10 +352,18 @@ export default class Game {
           }
 
           if (e.keyCode in keys && this.notBackwards(e.keyCode)) {
-            Directions.set(e.keyCode);
+            if (Directions.peek() !== e.keyCode) {
+              Directions.set(e.keyCode);
+            } else {
+              this.keyHeld -= 50;
+            }
             e.preventDefault();
           }
       }
+    });
+
+    document.addEventListener('keyup', () => {
+      this.keyHeld = 0;
     });
 
     document.addEventListener('click', (e: MouseEvent) => {
