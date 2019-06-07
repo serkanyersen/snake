@@ -1,4 +1,6 @@
 build
 .sass-cache
 node_modules
-output
+dist
+.cache
+.DS_Store

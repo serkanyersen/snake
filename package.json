@@ -4,9 +4,9 @@
   "description": "basic snake game written in Typescript",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc && rollup -c && node-sass --output-style compressed style.scss > build/style.css && echo 'Build Done.'",
-    "start": "live-server . --watch=build",
-    "lint": "find src -type f -name '*.ts' | xargs tslint"
+    "dev": "parcel serve src/index.html",
+    "build": "parcel build src/index.html --public-url .",
+    "lint": "eslint --ext .js,.ts ./src"
   },
   "repository": {
     "type": "git",
@@ -22,10 +22,17 @@
   },
   "homepage": "https://gitlab.com/serkanyersen/snake#README",
   "dependencies": {
-    "live-server": "^1.0.0",
-    "node-sass": "^4.6.0",
-    "rollup": "^0.51.2",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "typescript": "^3.5.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "@typescript-eslint/parser": "^1.9.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-typescript": "^4.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "parcel": "^1.12.3",
+    "parcel-plugin-inliner": "^1.0.10",
+    "sass": "^1.20.3"
   }
 }

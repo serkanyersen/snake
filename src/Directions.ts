@@ -1,32 +1,34 @@
-import {keys} from "./constants";
+import { keys } from './constants';
 
 namespace Directions {
-    let queue: number[] = [];
-    let current: number = keys.RIGHT;
+  let queue: number[] = [];
+  let current: number = keys.RIGHT;
 
-    export function set(key: number): void {
-        queue.push(key);
+  export const set = (key: number): void => {
+    if (Directions.peek() !== key) {
+      queue.push(key);
     }
+  };
 
-    export function get(): number {
-        return current;
-    }
+  export const get = (): number => {
+    return current;
+  };
 
-    export function pop(): number {
-        if (queue.length > 0) {
-            current = queue.shift();
-        }
-        return get();
+  export const pop = (): number => {
+    if (queue.length > 0) {
+      current = queue.shift() as number;
     }
+    return get();
+  };
 
-    export function flush(): void {
-        queue = [];
-        current = keys.RIGHT;
-    }
+  export const flush = (): void => {
+    queue = [];
+    current = keys.RIGHT;
+  };
 
-    export function peek(): number {
-        return queue.length > 0 ? queue[queue.length - 1] : current;
-    }
+  export const peek = (): number => {
+    return queue.length > 0 ? queue[queue.length - 1] : current;
+  };
 }
 
 export default Directions;

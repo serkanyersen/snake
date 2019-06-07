@@ -1,17 +1,21 @@
 namespace Locations {
-    let data: { [location: string]: boolean } = {};
+  const data: { [location: string]: boolean } = {};
 
-    export function set(x: number, y: number): void {
-        data[`${x}:${y}`] = true;
-    }
+  export const set = (x: number, y: number): void => {
+    data[`${x}:${y}`] = true;
+  };
 
-    export function remove(x: number, y: number): void {
-        delete data[`${x}:${y}`];
-    }
+  export const remove = (x: number, y: number): void => {
+    delete data[`${x}:${y}`];
+  };
 
-    export function has(x: number, y: number): boolean {
-        return data[`${x}:${y}`] === true;
-    }
+  export const has = (x: number, y: number): boolean => {
+    return data[`${x}:${y}`] === true;
+  };
+
+  export const get = () => {
+    return data;
+  };
 }
 
 export default Locations;
