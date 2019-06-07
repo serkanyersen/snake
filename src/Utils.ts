@@ -22,6 +22,14 @@ namespace Utils {
   export const bound = (num: number, min: number, max: number): number => {
     return Math.max(Math.min(num, max), min);
   };
+
+  export const debounce = <T extends Function>(fun: T, wait: number) => {
+    let id: number;
+    return (...args: any[]) => {
+      clearTimeout(id);
+      id = setTimeout(() => fun(...args), wait);
+    };
+  };
 }
 
 export default Utils;

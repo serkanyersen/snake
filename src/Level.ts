@@ -36,7 +36,7 @@ export default class Level {
       // https://github.com/Microsoft/TypeScript/issues/5296
       // this.pieces.push(new Piece(...this.translate(x0, y0), "wall"));
       const [tx0, ty0] = this.translate(x0, y0);
-      this.pieces.push(new Piece(tx0, ty0, 'wall'));
+      this.pieces.push(new Piece({ x: tx0, y: ty0, type: 'wall' }));
 
       // break when line is done
       if (Math.abs(x0 - x1) <= 0.5 && Math.abs(y0 - y1) <= 0.5) break;

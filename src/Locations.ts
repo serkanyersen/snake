@@ -12,6 +12,10 @@ namespace Locations {
   export const has = (x: number, y: number): boolean => {
     return data[`${x}:${y}`] === true;
   };
+
+  export const get = () => {
+    return data;
+  };
 }
 
 export default Locations;

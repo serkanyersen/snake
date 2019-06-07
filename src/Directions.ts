@@ -5,7 +5,9 @@ namespace Directions {
   let current: number = keys.RIGHT;
 
   export const set = (key: number): void => {
-    queue.push(key);
+    if (Directions.peek() !== key) {
+      queue.push(key);
+    }
   };
 
   export const get = (): number => {

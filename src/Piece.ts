@@ -2,8 +2,19 @@ import { SIZE } from './constants';
 import Utils from './Utils';
 import Locations from './Locations';
 
+type PieceParams = {
+  x: number;
+  y: number;
+  type?: string;
+  direction?: string;
+  next?: Piece | null;
+  prev?: Piece | null;
+};
+
 export default class Piece {
   next: Piece | null;
+
+  prev: Piece | null;
 
   x: number;
 
@@ -15,23 +26,40 @@ export default class Piece {
 
   type: string;
 
-  constructor (
-    x: number,
-    y: number,
-    type: string = 'body',
-    direction: string = 'RIGHT'
-  ) {
+  constructor ({
+    x,
+    y,
+    type = 'body',
+    direction = 'RIGHT',
+    next = null,
+    prev = null,
+  }: PieceParams) {
     this.direction = direction;
     this.type = type;
     this.x = x;
     this.y = y;
     this.el = document.createElement('div');
-    this.next = null;
+    this.next = next;
+    this.prev = prev;
     // Enable for a neat effect
     // this.el.innerHTML = "&#10096;";
     this.setType(type);
     this.setPos(this.x, this.y);
+    // this.applyClass();
     document.body.appendChild(this.el);
+  }
+
+  bend (headDirection: string) {
+    if (this.direction !== headDirection) {
+      this.el.className = '';
+      this.el.classList.add(
+        'cell',
+        this.type,
+        headDirection,
+        `${headDirection}-${this.direction}`
+      );
+      this.direction = headDirection;
+    }
   }
 
   setPos (x: number, y: number): void {
@@ -45,7 +73,7 @@ export default class Piece {
     this.applyClass();
 
     // Save the location of this piece to occupied spaces
-    // But don"t do this, if we are the food or head because;
+    // But don't do this, if we are the food or head because;
     // - Head cannot collide with itself
     // - We want to collide with food :)
     if (this.type !== 'head' && this.type !== 'food') {

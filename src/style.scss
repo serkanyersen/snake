@@ -1,5 +1,5 @@
 $headColor: rgb(26, 24, 24);
-$borderColor: rgb(37, 35, 34);
+$borderColor: transparent; //rgb(37, 35, 34);
 $bodyColor: #89C430;
 $foodColor: #85144b;
 $background: #32822B;
@@ -28,7 +28,7 @@ html, body {
 }
 
 body {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAD1BMVEU9mS0wgh8vcygmWzAwdTJ+TyYjAAABU0lEQVR4AY3KMWEEQRAEsaYgCkVhKJg/Jmef3irWthGJyC6q23QvwZUq0s9l9hBOVU2pbMrOOPsOlIWqypbNtpzvEGPapDratrmr+w7EdU1k687OndJDqNPdicrmuksrHoLqTqXU1Zxtbk+hZKvaqGw7t809hKIz2YS6Tdmu3oKOw0XJxdluDwGq40qiQtfmO2ypcZutTEHhIbhkc4dpy0qNewhXZe66vzPbpsp29R2kSJrD3CYsvkMoBXNdITp6CLaUotNdt6u2bus7zCFKuYLmLPMdnJmyaWLqtrNt3yFlywYTWrbN+Q7XyeCSxOasU9+hi3Odjdpkh+olSORiR5nYzmOgtN1d0HFtp/IQ0mRuSrjMVeI7qFvcHEXGJjwFu83mNpGt4wp9hx0Gc3WbM6HqIbjTdc3NDVGF2nfocnHiuqvbXHY7D+EsRanMnavONj7DPyF/vWXJ8sjoAAAAAElFTkSuQmCC);
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAEYAQMAAAC9QHvPAAAABlBMVEU+YyFThSxH3YrQAAAAzklEQVR4Ae3ZAQbDQBAF0E8OsEeaq++R5gDLbzDQaQz4qup/1NC3IEl2Motvxon8qPTGhrtXpW1UZsg6NjoTCXDj4tOlsZEZrAPuddq6+rGRGVwk8/ktYyMyw64JG6UZF3LbiAzWGW7ySBuR8aOuN84vpVrBddTGpvd+t4mE2NhE6/0WWZXS2FQuokdvbBzn7zJMnZTGpv4pLTA2wwC1ojQ2fYCqNzaRbYAqNTbzMVd9MyJSYGzGbfI23JAbm3XezrZIAmpjM3Z8emOjj/MC7DVwnN4PbsAAAAAASUVORK5CYII=')
 }
 
 .score {
@@ -61,24 +61,42 @@ button#start {
   color: darken($bodyColor, 10%);
   line-height: 20px;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // transition: height ease 0.2s, width ease 0.2s, margin ease 0.2s, font-size ease 0.2s;
 
   &:before {
     color: #C5F7A4;
-    content: "∴";
+    content: "⡱";
   }
 }
 
 .wall {
   border: none;
-  background: #275B33;
+  background: #83382C;
+  border-radius: 2px;
   z-index: 1;
-  mix-blend-mode: overlay;
+  // box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  // mix-blend-mode: exclusion;
+
+  &::before {
+    content: "⣿";
+    color: #DB563E;
+
+  }
 }
 
 .food {
-  background: $foodColor;
+  z-index: 4;
+  background: transparent;
   border-radius: 1em;
   color: transparent;
+  font-size: 30px;
+  &::before {
+    content: "🍎"
+  }
 }
 
 .body {
@@ -91,49 +109,39 @@ button#start {
   border-top: $border;
   border-bottom: $border;
   border-left: $border;
+  &::before {
+    content: "⢾"
+  }
 }
 
 .gulp {
   z-index: 3;
-  border: 1px dashed $foodColor;
-  background: none;
-  border-radius: 1em;
-  transform: scale(0.8) !important;
-  color: transparent;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  margin: -5px;
+  font-size: 24px;
+  // border-width: 3px;
 }
 
 .noclip{
-
   .head, .body, .tail {
-    opacity: 0.5;
+    opacity: 0.8;
   }
 }
 
 .head {
+  z-index: 5;
   background: $headColor;
   border-radius: 0 1em 1em 0;
   border: $border;
   border-left: none;
   color: darken($headColor, 10%);
-
-  &:before, &:after {
-    content: "";
-    height: 10px;
-    width: 1px;
-    border: 2px solid $headColor;
-    right: 0px;
-    top: 50%;
-    display: block;
-    position: absolute;
-    transform-origin: top;
-  }
-
-  &:after {
-    transform: rotate(-45deg);
-  }
+  // transition: none;
 
   &:before {
-    transform: rotate(-139deg);
+    content: "⢈";
+    color: #f5f5f5;
   }
 }
 
