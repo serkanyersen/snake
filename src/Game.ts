@@ -51,14 +51,14 @@ export default class Game {
       this.head.next.remove();
       this.head.next = null;
     }
-
-    const x = SIZE * 7;
+    const LENGTH = 10;
+    const x = (SIZE * LENGTH) + SIZE;
     const y = SIZE * 5;
 
     let curr = this.head;
     this.head.move(x, y);
 
-    for (let i = 1; i <= 5; i += 1) {
+    for (let i = 1; i <= LENGTH; i += 1) {
       curr.next = new Piece({ x: x - SIZE * i + 2, y, prev: curr });
       curr = curr.next;
     }
