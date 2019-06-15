@@ -8,8 +8,11 @@ export type LevelMap = line[];
 export default class Level {
   private pieces: Piece[] = [];
 
+  garden: HTMLDivElement;
+
   constructor (private generatorFunction: (rows: number, cols: number) => LevelMap) {
     this.generatorFunction = generatorFunction;
+    this.garden = (document.getElementById('garden') as HTMLDivElement);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -56,8 +59,8 @@ export default class Level {
   }
 
   render (): void {
-    const cols = Math.floor(document.body.clientHeight / SIZE);
-    const rows = Math.floor(document.body.clientWidth / SIZE);
+    const cols = Math.floor(this.garden.clientHeight / SIZE);
+    const rows = Math.floor(this.garden.clientWidth / SIZE);
     const level = this.generatorFunction(rows, cols);
 
     level.forEach(line => {

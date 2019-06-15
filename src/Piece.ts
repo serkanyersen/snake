@@ -26,6 +26,8 @@ export default class Piece {
 
   type: string;
 
+  garden: HTMLDivElement;
+
   constructor ({
     x,
     y,
@@ -45,8 +47,9 @@ export default class Piece {
     // this.el.innerHTML = "&#10096;";
     this.setType(type);
     this.setPos(this.x, this.y);
+    this.garden = (document.getElementById('garden') as HTMLDivElement);
     // this.applyClass();
-    document.body.appendChild(this.el);
+    this.garden.appendChild(this.el);
   }
 
   bend (headDirection: string) {
@@ -76,7 +79,7 @@ export default class Piece {
     // But don't do this, if we are the food or head because;
     // - Head cannot collide with itself
     // - We want to collide with food :)
-    if (this.type !== 'head' && this.type !== 'food') {
+    if (this.type !== 'head' && this.type !== 'food' && this.type !== 'golden') {
       Locations.set(x, y);
     }
   }
@@ -87,12 +90,12 @@ export default class Piece {
 
     // Transition through walls
     if (x < 0) {
-      X = Utils.snap(document.body.clientWidth) - SIZE;
+      X = Utils.snap(this.garden.clientWidth) - SIZE;
     } else if (y < 0) {
-      Y = Utils.snap(document.body.clientHeight) - SIZE;
-    } else if (x >= Utils.snap(document.body.clientWidth)) {
+      Y = Utils.snap(this.garden.clientHeight) - SIZE;
+    } else if (x >= Utils.snap(this.garden.clientWidth)) {
       X = 0;
-    } else if (y >= Utils.snap(document.body.clientHeight)) {
+    } else if (y >= Utils.snap(this.garden.clientHeight)) {
       Y = 0;
     }
 
@@ -143,6 +146,11 @@ export default class Piece {
   applyClass (): void {
     this.el.className = '';
     this.el.classList.add('cell', this.type, this.direction);
+  }
+
+  isCollidingWith (node: Piece | null) {
+    if (node === null) return false;
+    return this.x === node.x && this.y === node.y;
   }
 
   remove (): void {

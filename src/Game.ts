@@ -1,4 +1,4 @@
-import { SIZE, MARGIN, SLOWEST, FASTEST, keys } from './constants';
+import { SIZE, MARGIN, SLOWEST, FASTEST, LENGTH, keys } from './constants';
 import Piece from './Piece';
 import Utils from './Utils';
 import Level from './Level';
@@ -13,13 +13,19 @@ export default class Game {
 
   food: Piece | null = null;
 
+  goldenApple: Piece | null = null;
+
   length: number = 0;
+
+  growth: number = 0;
 
   highScore: number = 0;
 
   score: number = 0;
 
   currentLevel: Level | null = null;
+
+  garden: HTMLDivElement;
 
   private moving: boolean = false;
 
@@ -36,9 +42,34 @@ export default class Game {
   constructor (private levels: Level[]) {
     this.head = new Piece({ x: 80, y: 80, type: 'head' });
     this.tail = this.resetHead();
+    this.garden = document.getElementById('garden') as HTMLDivElement;
+    this.renderGarden();
     this.handleFood();
     this.setEvents();
-    // this.tail = this.head.next.next;
+  }
+
+  renderGarden () {
+    const { clientHeight, clientWidth } = document.body;
+    let TOP = Math.floor(Math.max(50, clientHeight * 0.10));
+    let LEFT = Math.floor(Math.max(50, clientWidth * 0.10));
+    let WIDTH = clientWidth - LEFT * 2;
+    let HEIGHT = clientHeight - TOP * 2;
+
+    TOP -= TOP % SIZE;
+    LEFT -= TOP % SIZE;
+    WIDTH -= WIDTH % SIZE;
+    HEIGHT -= HEIGHT % SIZE;
+
+    this.garden.style.top = `${TOP}px`;
+    this.garden.style.left = `${LEFT}px`;
+    // this.garden.style.bottom = `${TOP}px`;
+    // this.garden.style.right = `${LEFT}px`;
+    this.garden.style.width = `${WIDTH}px`;
+    this.garden.style.height = `${HEIGHT}px`;
+
+
+    document.documentElement.style
+      .setProperty('--size', `${SIZE}px`);
   }
 
   getRandomLevel (): Level {
@@ -51,10 +82,10 @@ export default class Game {
       this.head.next.remove();
       this.head.next = null;
     }
-    const LENGTH = 10;
+
     const x = (SIZE * LENGTH) + SIZE;
     const y = SIZE * 5;
-
+    this.length = LENGTH;
     let curr = this.head;
     this.head.move(x, y);
 
@@ -73,7 +104,6 @@ export default class Game {
     // Don"t restart already running game
     if (this.moving === false) {
       this.tail = this.resetHead();
-      this.length = 0;
       this.debugSpeed = 0;
       this.keyHeld = 0;
       this.score = 0;
@@ -92,7 +122,7 @@ export default class Game {
     this.moving = false;
     const el = <HTMLDivElement>document.querySelector('.score');
     el.innerHTML = `
-      Game over! Score: ${this.length * 1000}.
+      Game over! Score: ${this.growth * 1000}.
       <button id="start">Click here to try again.</button>
     `;
   }
@@ -101,8 +131,8 @@ export default class Game {
      * Get a random empty location for food
      */
   getFoodLocation (): number[] {
-    let x = Utils.rand(MARGIN, document.body.clientWidth - MARGIN, SIZE);
-    let y = Utils.rand(MARGIN, document.body.clientHeight - MARGIN, SIZE);
+    let x = Utils.rand(MARGIN, this.garden.clientWidth - MARGIN, SIZE);
+    let y = Utils.rand(MARGIN, this.garden.clientHeight - MARGIN, SIZE);
 
     // If random spot is already filled, pick a new one
     // Pick until you find an empty spot
@@ -123,20 +153,13 @@ export default class Game {
 
     // if head and food collided, replace head with the food
     // set the correct type for each piece
-    if (this.head.x === this.food.x && this.head.y === this.food.y) {
-      // this.food.next = this.head; // put food at the top of the chain
-      // this.food.direction = this.head.direction; // Needs to go to same direction where head was going
-      // this.head.setType('body'); // head is not body
-      // this.food.setType('head'); // food is now head
-      // this.head = this.food; // Update the Game instance with new head
-      // (this.head.next as Piece).prev = this.head;
-
-      this.swallowFood();
+    if (this.head.isCollidingWith(this.food) || this.head.isCollidingWith(this.goldenApple)) {
+      this.swallowFood(this.head.isCollidingWith(this.food) ? 'food' : 'golden');
 
       // Do not count baits grabbed while
       // in no clip mode
       if (this.noClip === false) {
-        this.length += 1; // Snake got bigger
+        this.growth += 1; // Snake got bigger
       }
 
       this.updateScore(); // Calculate the new score
@@ -144,16 +167,38 @@ export default class Game {
     }
   }
 
-  async swallowFood () {
-    if (this.food == null) { return; }
+  // eslint-disable-next-line class-methods-use-this
+  mayIHaveGoldenApple () {
+    const chance = 5;
+    const pick = Math.random() * 100;
+    return pick < chance;
+  }
 
-    // this.food.remove();
-    this.tail.next = this.food;
-    this.tail.setType('body');
-    this.food.prev = this.tail;
-    this.tail = this.food;
-    this.food.setType('tail');
-    this.food = null; // food is gone now
+  handleGoldenApple () {
+    if (this.goldenApple === null) {
+      const [foodX, foodY] = this.getFoodLocation();
+      this.goldenApple = new Piece({ x: foodX, y: foodY, type: 'golden' });
+    }
+  }
+
+  async swallowFood (type: string) {
+    if (type === 'food') {
+      if (this.food == null) { return; }
+      this.tail.next = this.food;
+      // this.tail.setType('body');
+      this.food.prev = this.tail;
+      this.tail = this.food;
+      // this.food.setType('tail');
+      this.food = null; // food is gone now
+    } else if (type === 'golden') {
+      if (this.goldenApple == null) { return; }
+      this.tail.next = this.goldenApple;
+      this.tail.setType('body');
+      this.goldenApple.prev = this.tail;
+      this.tail = this.goldenApple;
+      this.goldenApple.setType('tail');
+      this.goldenApple = null; // food is gone now
+    }
 
     const swallow = (node: Piece) => {
       if (node.next !== null) {
@@ -174,11 +219,14 @@ export default class Game {
     };
 
     swallow(this.head.next as Piece);
+    if (this.mayIHaveGoldenApple()) {
+      this.handleGoldenApple();
+    }
   }
 
   getSpeed (): number {
     const initialSpeed = 130;
-    const calculated = (initialSpeed - this.length * 0.5) + this.debugSpeed + this.keyHeld;
+    const calculated = (initialSpeed - this.growth * 0.5) + this.debugSpeed + this.keyHeld;
 
     return Utils.bound(calculated, FASTEST, SLOWEST);
   }
@@ -190,7 +238,7 @@ export default class Game {
 
     const level = 500;
     const speed = this.getSpeed();
-    const val = (SLOWEST - speed) * this.length;
+    const val = (SLOWEST - speed) * this.growth;
     let leveled = Utils.snap(val, level);
 
     // You should not get zero points
@@ -306,7 +354,7 @@ export default class Game {
           // Enable No Clip mode.
         case keys.C:
           this.noClip = !this.noClip;
-          document.body.classList.toggle('noclip');
+          this.garden.classList.toggle('noclip');
           break;
           // Slowdown the snake
         case keys.J:
@@ -374,6 +422,8 @@ export default class Game {
     });
 
     window.addEventListener('resize', Utils.debounce(() => {
+      this.renderGarden();
+
       if (this.currentLevel) {
         this.currentLevel.remove();
         this.currentLevel.render();
@@ -389,6 +439,12 @@ export default class Game {
         this.food = null;
         this.handleFood();
       }
+
+      if (this.goldenApple !== null) {
+        this.goldenApple.remove();
+        this.goldenApple = null;
+        this.handleGoldenApple();
+      }
     }, 100));
   }
 
@@ -402,20 +458,20 @@ export default class Game {
   }
 
   drawGrid (): void {
-    for (let x = 0; x < document.body.clientWidth; x += SIZE) {
+    for (let x = 0; x < this.garden.clientWidth; x += SIZE) {
       const div = document.createElement('div');
       div.style.top = '0px';
       div.style.left = `${x}px`;
       div.classList.add('vertical-grid');
-      document.body.appendChild(div);
+      this.garden.appendChild(div);
     }
 
-    for (let x = 0; x < document.body.clientHeight; x += SIZE) {
+    for (let x = 0; x < this.garden.clientHeight; x += SIZE) {
       const div = document.createElement('div');
       div.style.left = '0px';
       div.style.top = `${x}px`;
       div.classList.add('horizontal-grid');
-      document.body.appendChild(div);
+      this.garden.appendChild(div);
     }
 
     this.gridVisible = true;
