@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "parcel serve src/index.html",
     "build": "parcel build src/index.html --public-url .",
-    "lint": "eslint --ext .js,.ts ./src"
+    "lint": "eslint --ext .js,.ts ./src",
+    "gh-pages": "gh-pages -d dist -t"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://gitlab.com/serkanyersen/snake#README",
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "typescript": "^3.5.1"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@ Just for fun. It's written in vanilla js, no libraries used. Also it uses HTML e
 
 ![Example](demo.gif)
 
-[Demo](http://codepen.io/serkanyersen/pen/bpOWwE?editors=0010)
+[Demo](https://serkanyersen.github.io/snake/)
 
 ## Controls
  - User arrow keys to move around
