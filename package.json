@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "parcel serve src/index.html",
-    "build": "parcel build src/index.html --public-url .",
+    "build": "rimraf ./dist && parcel build src/index.html --public-url .",
     "lint": "eslint --ext .js,.ts ./src",
     "gh-pages": "gh-pages -d dist -t"
   },
@@ -35,6 +35,7 @@
     "eslint-plugin-import": "^2.17.3",
     "parcel": "^1.12.3",
     "parcel-plugin-inliner": "^1.0.10",
+    "rimraf": "^2.6.3",
     "sass": "^1.20.3"
   }
 }
