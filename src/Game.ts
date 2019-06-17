@@ -5,7 +5,6 @@ import Level from './Level';
 import Locations from './Locations';
 import Directions from './Directions';
 
-// window.Locations = Locations;
 export default class Game {
   head: Piece;
 
@@ -50,15 +49,15 @@ export default class Game {
 
   renderGarden () {
     const { clientHeight, clientWidth } = document.body;
-    let TOP = Math.floor(Math.max(50, clientHeight * 0.10));
-    let LEFT = Math.floor(Math.max(50, clientWidth * 0.10));
+    const TOP = Math.max(60, Math.floor(clientHeight * 0.10));
+    const LEFT = Math.max(60, Math.floor(clientWidth * 0.10));
     let WIDTH = clientWidth - LEFT * 2;
     let HEIGHT = clientHeight - TOP * 2;
 
-    TOP -= TOP % SIZE;
-    LEFT -= TOP % SIZE;
-    WIDTH -= WIDTH % SIZE;
-    HEIGHT -= HEIGHT % SIZE;
+    // TOP += SIZE - (TOP % SIZE);
+    // LEFT += SIZE - (LEFT % SIZE);
+    WIDTH += SIZE - (WIDTH % SIZE);
+    HEIGHT += SIZE - (HEIGHT % SIZE);
 
     this.garden.style.top = `${TOP}px`;
     this.garden.style.left = `${LEFT}px`;
@@ -116,11 +115,11 @@ export default class Game {
   }
 
   /**
-     * GAME OVER
-     */
+   * GAME OVER
+   */
   over (): void {
     this.moving = false;
-    const el = <HTMLDivElement>document.querySelector('.score');
+    const el = document.querySelector('.score') as HTMLDivElement;
     el.innerHTML = `
       Game over! Score: ${this.growth * 1000}.
       <button id="start">Click here to try again.</button>
@@ -128,8 +127,8 @@ export default class Game {
   }
 
   /**
-     * Get a random empty location for food
-     */
+   * Get a random empty location for food
+   */
   getFoodLocation (): number[] {
     let x = Utils.rand(MARGIN, this.garden.clientWidth - MARGIN, SIZE);
     let y = Utils.rand(MARGIN, this.garden.clientHeight - MARGIN, SIZE);
@@ -185,19 +184,15 @@ export default class Game {
     if (type === 'food') {
       if (this.food == null) { return; }
       this.tail.next = this.food;
-      // this.tail.setType('body');
       this.food.prev = this.tail;
       this.tail = this.food;
-      // this.food.setType('tail');
-      this.food = null; // food is gone now
+      this.food = null;
     } else if (type === 'golden') {
       if (this.goldenApple == null) { return; }
       this.tail.next = this.goldenApple;
-      this.tail.setType('body');
       this.goldenApple.prev = this.tail;
       this.tail = this.goldenApple;
-      this.goldenApple.setType('tail');
-      this.goldenApple = null; // food is gone now
+      this.goldenApple = null;
     }
 
     const swallow = (node: Piece) => {
@@ -225,7 +220,7 @@ export default class Game {
   }
 
   getSpeed (): number {
-    const initialSpeed = 130;
+    const initialSpeed = 200;
     const calculated = (initialSpeed - this.growth * 0.5) + this.debugSpeed + this.keyHeld;
 
     return Utils.bound(calculated, FASTEST, SLOWEST);
@@ -254,9 +249,10 @@ export default class Game {
   showScore (): void {
     const el = <HTMLDivElement>document.querySelector('.score');
     this.highScore = this.highScore < this.score ? this.score : this.highScore;
+    // Speed: ${Math.floor(1000 / this.getSpeed())}bps
     el.innerHTML = `
-            Score: ${this.score}, High Score: ${this.highScore}
-        `;
+      Score: ${this.score}, High Score: ${this.highScore}
+    `;
   }
 
   frame (): void {
@@ -308,13 +304,12 @@ export default class Game {
     this.tail.next = null; // nothing after the tail.
     this.tail.setType('tail');
 
-
     // turn previous head into body piece
     prevHead.setType('body');
     prevHead.prev = this.head;
     // if head changed direction, bend this piece accordingly.
     prevHead.bend(this.head.direction);
-
+    Locations.set(prevHead.x, prevHead.y); // when food is eaten, there is a gap in the locations.
     this.head.prev = null; // nothing before the head
     this.head.next = prevHead; // previous head follows new head
     this.head.setType('head'); // it is head.
@@ -351,12 +346,12 @@ export default class Game {
             this.drawGrid();
           }
           break;
-          // Enable No Clip mode.
+        // Enable No Clip mode.
         case keys.C:
           this.noClip = !this.noClip;
           this.garden.classList.toggle('noclip');
           break;
-          // Slowdown the snake
+        // Slowdown the snake
         case keys.J:
           this.debugSpeed += 10;
           break;
@@ -364,7 +359,7 @@ export default class Game {
         case keys.K:
           this.debugSpeed -= 10;
           break;
-          // Pause or restart the game
+        // Pause or restart the game
         case keys.SPACE:
           if (this.moving) {
             this.paused = !this.paused;
@@ -373,11 +368,11 @@ export default class Game {
           }
           e.preventDefault();
           break;
-          // Restart the game
+        // Restart the game
         case keys.RETURN:
           this.start();
           break;
-          // Arrow keys or nothing
+        // Arrow keys or nothing
         default:
           // Select levels
           // 0 = remove level
@@ -415,7 +410,7 @@ export default class Game {
     });
 
     document.addEventListener('click', (e: MouseEvent) => {
-      const el = <HTMLElement>e.target;
+      const el = e.target as HTMLElement;
       if (el.id === 'start') {
         this.start();
       }
@@ -450,9 +445,7 @@ export default class Game {
 
   removeGrid (): void {
     const grids = document.querySelectorAll('.vertical-grid, .horizontal-grid');
-    Array.from(grids).forEach(div => {
-      Utils.removeNode(div);
-    });
+    Array.from(grids).forEach(Utils.removeNode);
 
     this.gridVisible = false;
   }
@@ -475,5 +468,18 @@ export default class Game {
     }
 
     this.gridVisible = true;
+  }
+
+  drawHitboxes () {
+    document.querySelectorAll('.hitbox').forEach(Utils.removeNode);
+
+    Locations.getAll().forEach((a, k) => {
+      const [x, y] = k.split(':');
+      const hitbox = document.createElement('div');
+      hitbox.classList.add('hitbox');
+      hitbox.style.top = `${y}px`;
+      hitbox.style.left = `${x}px`;
+      this.garden.append(hitbox);
+    });
   }
 }

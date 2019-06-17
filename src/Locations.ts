@@ -16,6 +16,8 @@ namespace Locations {
   export const get = (x: number, y: number) => {
     return data.get(`${x}:${y}`);
   };
+
+  export const getAll = () => data;
 }
 
 export default Locations;

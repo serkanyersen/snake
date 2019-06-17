@@ -12,7 +12,7 @@ export enum keys {
 }
 
 export const SIZE = 40;
-export const LENGTH = 10;
+export const LENGTH = 5;
 export const MARGIN = 60;
 export const SLOWEST = 250;
 export const FASTEST = 0;

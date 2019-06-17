@@ -231,3 +231,12 @@ button#start {
 .vertical-grid {
   bottom: 0;
 }
+
+.hitbox {
+  position: absolute;
+  outline: 1px dashed rgba(0, 0, 0, 0.5);
+  height: var(--size);
+  width: var(--size);
+  z-index: 10;
+  background: rgba(255,255,255,0.3)
+}
