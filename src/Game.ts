@@ -69,6 +69,8 @@ export default class Game {
 
     document.documentElement.style
       .setProperty('--size', `${SIZE}px`);
+
+    this.showScore();
   }
 
   getRandomLevel (): Level {
@@ -110,6 +112,7 @@ export default class Game {
 
       this.showScore();
       this.moving = true;
+      this.splashToggle(false);
       requestAnimationFrame(this.frame.bind(this));
     }
   }
@@ -119,11 +122,22 @@ export default class Game {
    */
   over (): void {
     this.moving = false;
-    const el = document.querySelector('.score') as HTMLDivElement;
-    el.innerHTML = `
-      Game over! Score: ${this.growth * 1000}.
-      <button id="start">Click here to try again.</button>
-    `;
+    const { score } = this;
+
+    const die = (node: Piece | null) => {
+      if (node === null) return;
+      node.el.classList.add('vanish');
+      setTimeout(() => die(node.prev), 20);
+    };
+
+    die(this.tail);
+    this.splashToggle(true);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  splashToggle (show: boolean) {
+    const splash = document.querySelector('.splash') as HTMLElement;
+    splash.style.display = show ? '' : 'none';
   }
 
   /**
@@ -153,7 +167,9 @@ export default class Game {
     // if head and food collided, replace head with the food
     // set the correct type for each piece
     if (this.head.isCollidingWith(this.food) || this.head.isCollidingWith(this.goldenApple)) {
-      this.swallowFood(this.head.isCollidingWith(this.food) ? 'food' : 'golden');
+      const type = this.head.isCollidingWith(this.food) ? 'food' : 'golden';
+
+      this.swallowFood(type);
 
       // Do not count baits grabbed while
       // in no clip mode
@@ -161,7 +177,7 @@ export default class Game {
         this.growth += 1; // Snake got bigger
       }
 
-      this.updateScore(); // Calculate the new score
+      this.updateScore(type === 'food' ? 10 : 50); // Calculate the new score
       this.showScore(); // Update the score
     }
   }
@@ -226,33 +242,24 @@ export default class Game {
     return Utils.bound(calculated, FASTEST, SLOWEST);
   }
 
-  updateScore (): number {
+  updateScore (won: number): number {
     if (this.noClip === true) {
       return this.score;
     }
 
-    const level = 500;
-    const speed = this.getSpeed();
-    const val = (SLOWEST - speed) * this.growth;
-    let leveled = Utils.snap(val, level);
-
-    // You should not get zero points
-    if (leveled < level) {
-      leveled = level;
-    }
-
-    this.score += leveled;
+    this.score += won;
 
     return this.score;
   }
 
   showScore (): void {
-    const el = <HTMLDivElement>document.querySelector('.score');
+    const points = document.getElementById('points') as HTMLDivElement;
+    const top = document.getElementById('top') as HTMLDivElement;
+
     this.highScore = this.highScore < this.score ? this.score : this.highScore;
     // Speed: ${Math.floor(1000 / this.getSpeed())}bps
-    el.innerHTML = `
-      Score: ${this.score}, High Score: ${this.highScore}
-    `;
+    points.innerHTML = `${this.score}`;
+    top.innerHTML = `TOP: ${this.highScore}`;
   }
 
   frame (): void {
