@@ -18,8 +18,6 @@ export default class Game {
 
   growth: number = 0;
 
-  highScore: number = 0;
-
   score: number = 0;
 
   currentLevel: Level | null = null;
@@ -47,6 +45,14 @@ export default class Game {
     this.setEvents();
   }
 
+  get highScore (): number {
+    return parseInt(localStorage.getItem('high-score') || '0', 10) || 0;
+  }
+
+  set highScore (value: number) {
+    localStorage.setItem('high-score', value.toString());
+  }
+
   renderGarden () {
     const { clientHeight, clientWidth } = document.body;
     const TOP = Math.max(60, Math.floor(clientHeight * 0.10));
@@ -70,6 +76,7 @@ export default class Game {
     document.documentElement.style
       .setProperty('--size', `${SIZE}px`);
 
+    this.showTopScore();
     this.showScore();
   }
 
@@ -122,7 +129,7 @@ export default class Game {
    */
   over (): void {
     this.moving = false;
-    const { score } = this;
+    // const { score } = this;
 
     const die = (node: Piece | null) => {
       if (node === null) return;
@@ -131,7 +138,14 @@ export default class Game {
     };
 
     die(this.tail);
+    this.showTopScore();
     this.splashToggle(true);
+  }
+
+  showTopScore () {
+    const top = document.getElementById('top') as HTMLDivElement;
+    this.highScore = this.highScore < this.score ? this.score : this.highScore;
+    top.innerHTML = `TOP: ${this.highScore}`;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -212,6 +226,7 @@ export default class Game {
     }
 
     const swallow = (node: Piece) => {
+      if (node === null) return;
       if (node.next !== null) {
         if (node.prev !== null) {
           node.prev.el.classList.remove('gulp');
@@ -254,12 +269,9 @@ export default class Game {
 
   showScore (): void {
     const points = document.getElementById('points') as HTMLDivElement;
-    const top = document.getElementById('top') as HTMLDivElement;
 
-    this.highScore = this.highScore < this.score ? this.score : this.highScore;
     // Speed: ${Math.floor(1000 / this.getSpeed())}bps
     points.innerHTML = `${this.score}`;
-    top.innerHTML = `TOP: ${this.highScore}`;
   }
 
   frame (): void {
@@ -405,7 +417,7 @@ export default class Game {
             if (Directions.peek() !== e.keyCode) {
               Directions.set(e.keyCode);
             } else {
-              this.keyHeld -= 50;
+              // this.keyHeld -= 50;
             }
             e.preventDefault();
           }

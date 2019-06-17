@@ -15,6 +15,7 @@ module.exports = {
         js: 'never',
         jsx: 'never',
     }],
+    'class-methods-use-this': 0,
     'object-curly-newline': 0,
     'arrow-body-style': 0,
     // allow function without return statement
