@@ -33,7 +33,7 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-typescript": "^4.0.0",
     "eslint-plugin-import": "^2.17.3",
-    "parcel": "^1.12.3",
+    "parcel": "^2.8.2",
     "parcel-plugin-inliner": "^1.0.10",
     "rimraf": "^2.6.3",
     "sass": "^1.20.3"
